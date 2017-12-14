@@ -28,19 +28,34 @@
 
                 <LinearLayout
                     android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:baselineAligned="false"
                     android:orientation="vertical">
 
                     <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="fill_parent"
+                        android:layout_margin="10dp"
+                        android:background="@android:color/darker_gray">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical" />
+                            android:layout_gravity="bottom"
+                            android:orientation="vertical">
+
+                            <EditText
+                                android:id="@+id/inputChat"
+                                android:layout_width="match_parent"
+                                android:layout_height="55dp"
+                                android:layout_gravity="bottom"
+                                android:background="@color/common_google_signin_btn_text_dark_default"
+                                android:ems="10"
+                                android:hint="Input your message and press return" />
+                        </LinearLayout>
                     </ScrollView>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -65,6 +80,11 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
+                    <Button
+                        android:id="@+id/button2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Button" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -111,13 +131,13 @@
                                 android:inputType="textPersonName" />
 
                             <TextView
-                                android:id="@+id/txtSex"
+                                android:id="@+id/txtGender"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Sex" />
+                                android:text="Gender" />
 
                             <Spinner
-                                android:id="@+id/inputSex"
+                                android:id="@+id/inputGender"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
 
@@ -148,10 +168,10 @@
                                 android:text="Save" />
 
                             <Button
-                                android:id="@+id/button3"
+                                android:id="@+id/btnSignOut"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Button" />
+                                android:text="Sign Out" />
 
                         </LinearLayout>
                     </ScrollView>

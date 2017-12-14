@@ -4,16 +4,16 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
 
+
+import com.example.redcarpet.Database.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -27,25 +27,38 @@ public class MainActivity extends AppCompatActivity {
     private EditText mPhoneNumber;
     private EditText mNicknane;
     private String userId;
-    private Spinner mSex;
+    private Spinner mGender;
     private EditText mAge;
     private Switch mShareLocation;
     private Button mSave;
+    private Button mSignOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Variables to work with Firebase
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        //Variables to work with screen contents
         mPhoneNumber = (EditText)findViewById(R.id.inputPhoneNumber);
         mNicknane = (EditText)findViewById(R.id.inputNickname);
-        mSex = (Spinner) findViewById(R.id.inputSex);
+        mGender = (Spinner) findViewById(R.id.inputGender);
         mAge = (EditText)findViewById(R.id.inputAge);
         mShareLocation = (Switch) findViewById(R.id.shareLocation);
         mSave = (Button) findViewById(R.id.btnSave);
+        mSignOut = (Button) findViewById(R.id.btnSignOut);
+
+        //Procedure to work with choices list (Gender)
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.genders, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mGender.setAdapter(adapter);
+
+        //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        //mapFragment.getMapAsync((OnMapReadyCallback) MainActivity.this);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -56,10 +69,12 @@ public class MainActivity extends AppCompatActivity {
                     mPhoneNumber.setText(user.getPhoneNumber());
                     mPhoneNumber.setEnabled(false);
                 } else { // User is signed out
-                    startActivity(new Intent(MainActivity.this, PhoneAuthActivity.class));
+                    openPhoneVerification();
                 }
             }
         };
+
+        createTabHost();
 
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,45 +83,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //startActivity(new Intent(MainActivity.this, PhoneAuthActivity.class));
-        createTabHost();
+        mSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                openPhoneVerification();
+            }
+        });
     }
 
-
-    public class User {
-
-        public String username;
-        public String email;
-
-        public User() {
-            // Default constructor required for calls to DataSnapshot.getValue(User.class)
-        }
-
-        public User(String username, String email) {
-            this.username = username;
-            this.email = email;
-        }
+    public void showMap() {
 
     }
 
-    private void writeNewUser() {
-        User user = new User(mNicknane.toString(), mAge.toString());
-
+    public void writeNewUser() {
+        User user = new User(
+                    mNicknane.getText().toString(),
+                    mGender.getSelectedItem().toString(),
+                    mAge.getText().toString(),
+                    null);
         mDatabase.child("users").child(userId).setValue(user);
     }
 
-
-
-
+    public void openPhoneVerification() {
+        startActivity(new Intent(MainActivity.this, PhoneAuthActivity.class));
+    }
 
     public void createTabHost() {
         TabHost host = (TabHost)findViewById(R.id.tab_host);
         host.setup();
 
         //Tab 1
-        TabHost.TabSpec spec = host.newTabSpec("Tab One");
+        TabHost.TabSpec spec = host.newTabSpec("Chat");
         spec.setContent(R.id.tab1);
-        spec.setIndicator("Tab One");
+        spec.setIndicator("Chat");
         host.addTab(spec);
 
         //Tab 2
@@ -122,15 +132,15 @@ public class MainActivity extends AppCompatActivity {
         host.addTab(spec);
 
         //Tab 3
-        spec = host.newTabSpec("Tab Three");
+        spec = host.newTabSpec("Event");
         spec.setContent(R.id.tab4);
-        spec.setIndicator("Tab Three");
+        spec.setIndicator("Event");
         host.addTab(spec);
 
         //Tab 5 - Settings
         spec = host.newTabSpec("Settings");
         spec.setContent(R.id.tab5);
-        spec.setIndicator("Tab Three");
+        spec.setIndicator("Sets");
         host.addTab(spec);
     }
 

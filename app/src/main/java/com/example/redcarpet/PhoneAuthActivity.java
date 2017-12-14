@@ -40,7 +40,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     private static final int STATE_SIGNIN_SUCCESS = 6;
 
     // [START declare_auth]
-    private FirebaseAuth mAuth;
+    public FirebaseAuth mAuth;
     // [END declare_auth]
 
     private boolean mVerificationInProgress = false;
@@ -60,7 +60,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     private Button mStartButton;
     private Button mVerifyButton;
     private Button mResendButton;
-    private Button mSignOutButton;
+    public Button mSignOutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,7 +265,7 @@ public class PhoneAuthActivity extends AppCompatActivity implements
     }
     // [END sign_in_with_phone]
 
-    private void signOut() {
+    public void signOut() {
         mAuth.signOut();
         updateUI(STATE_INITIALIZED);
     }
